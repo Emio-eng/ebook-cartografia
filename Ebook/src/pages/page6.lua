@@ -66,7 +66,7 @@ function page6Scene:create(event)
     local sceneGroup = self.view
 
     -- Carregue a capa
-    local capa = display.newImageRect(sceneGroup, "src/assets/frame7.png", 768, 1024)
+    local capa = display.newImageRect(sceneGroup, "src/assets/frames/frame7.png", 768, 1024)
     capa.x = display.contentCenterX
     capa.y = display.contentCenterY
 
