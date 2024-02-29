@@ -1,6 +1,8 @@
--- main.lua
+local composer = require "composer"
 
-local composer = require("composer")
+local capa = require("src.pages.page6")
 
--- Cria e vai para a cena da capa
-composer.gotoScene("src.pages.capa", { effect = "fade", time = 500 })
+-- load title screen
+composer.gotoScene( "src.pages.page6", "fade" )
+
+capa:create()
