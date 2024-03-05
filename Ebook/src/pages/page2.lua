@@ -39,6 +39,23 @@ function page2Scene:create(event)
     buttonZoomOut:setFillColor(0, 0, 0)
     buttonZoomOut:addEventListener("tap", zoomOut)
 
+    local buttonRight = display.newImageRect(sceneGroup, "src/assets/icons/arrow-right.png", 78, 34)
+    buttonRight.x = 695
+    buttonRight.y = 960
+    buttonRight:addEventListener('tap', function()
+        composer.removeScene("src.pages.page2") -- Remover a cena atual
+        composer.gotoScene("src.pages.page3", {effect = "fade", time = 500})
+    end)
+    
+    local buttonLeft = display.newImageRect(sceneGroup, "src/assets/icons/arrow-left.png", 78, 34)
+    buttonLeft.x = 70
+    buttonLeft.y = 960
+    buttonLeft:addEventListener('tap', function()
+        composer.removeScene("src.pages.page2") -- Remover a cena atual
+        composer.gotoScene("src.pages.page1", {effect = "fade", time = 500})
+    end)
+
+
     -- Carregue o mapa original
     mapaOriginal = display.newImageRect(sceneGroup, "src/assets/page2/mapa.png", 514, 516)
     mapaOriginal.x = display.contentCenterX
@@ -50,5 +67,7 @@ function page2Scene:create(event)
     mapaSubstituto.y = 750
     mapaSubstituto.isVisible = false  -- Inicialmente invisível
 end
+
+page2Scene:addEventListener("create", page2Scene)
 
 return page2Scene

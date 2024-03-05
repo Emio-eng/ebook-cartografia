@@ -76,13 +76,25 @@ function page6Scene:create(event)
     mapaOriginal.y = 750
  
     -- Crie os botões para navegação
+   
     local buttonRight = display.newImageRect(sceneGroup, "src/assets/icons/arrow-right.png", 78, 34)
-    buttonRight.x = 70  
-    buttonRight.y = 960 
-
+    buttonRight.x = 695
+    buttonRight.y = 960
+    buttonRight:addEventListener('tap', function()
+        composer.removeScene("src.pages.page6") -- Remover a cena atual
+        composer.gotoScene("src.pages.contracapa", {effect = "fade", time = 500})
+    end)
+    
     local buttonLeft = display.newImageRect(sceneGroup, "src/assets/icons/arrow-left.png", 78, 34)
-    buttonLeft.x = 695  
-    buttonLeft.y = 960 
+    buttonLeft.x = 70
+    buttonLeft.y = 960
+    buttonLeft:addEventListener('tap', function()
+        composer.removeScene("src.pages.page6") -- Remover a cena atual
+        composer.gotoScene("src.pages.page5", {effect = "fade", time = 500})
+    end)
+
+
+
 
 
     local botaoNorte, textoNorte = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 800, "Norte", 30, onBotaoNorteClicado)
@@ -94,5 +106,7 @@ function page6Scene:create(event)
 
 
 end
+
+page6Scene:addEventListener("create", page6Scene)
 
 return page6Scene

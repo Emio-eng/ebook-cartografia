@@ -3,28 +3,25 @@ local composer = require("composer")
 local capaScene = composer.newScene()
 
 -- Função para lidar com o toque no botão
-local function handleButtonTap(event)
-  composer.gotoScene("src.pages.contracapa", {effect = "fade", time = 500})
-end
-
 function capaScene:create(event)
     local sceneGroup = self.view
 
-    -- Carrega a imagem da capa
-    local largura = 768   -- Largura desejada
-    local altura = 1024   -- Altura desejada
-
-    local capa = display.newImageRect(sceneGroup, "src/assets/capa.png", largura, altura)
+    local capa = display.newImageRect(sceneGroup, "src/assets/capa.png", 768, 1024)
     capa.x = display.contentCenterX
     capa.y = display.contentCenterY
 
     -- Adiciona um botão para ir para a próxima página usando a imagem "button-right.png"
-    local buttonRight = display.newImageRect(sceneGroup, "src/assets/button-right.png", 78, 34)
+    local buttonRight = display.newImageRect(sceneGroup, "src/assets//icons/button-right.png", 78, 34)
     buttonRight.x = 695  -- Defina a posição X desejada
     buttonRight.y = 964  -- Defina a posição Y desejada
+    buttonRight:addEventListener('tap', function(event)
+      composer.removeScene("src.pages.capa")
+      composer.gotoScene("src.pages.page1", {effect = "fade", time = 500})
+  end)
 
     -- Configura o evento de toque no botão
-    buttonRight:addEventListener('tap', handleButtonTap)
 end
+
+capaScene:addEventListener("create", capaScene)
 
 return capaScene

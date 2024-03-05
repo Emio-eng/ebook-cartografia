@@ -7,23 +7,17 @@ function contracapaScene:create(event)
 
     print("Contracapa Scene: create")
 
-    -- Adicione o código para a contracapa aqui
-    local largura = 768   -- Largura desejada
-    local altura = 1024   -- Altura desejada
-
-    local contracapa = display.newImageRect(sceneGroup, "src/assets/contra.png", largura, altura)
+    local contracapa = display.newImageRect(sceneGroup, "src/assets/contra.png", 768, 1024)
     contracapa.x = display.contentCenterX
     contracapa.y = display.contentCenterY
+
+    local buttonLeft = display.newImageRect(sceneGroup, "src/assets//icons/button-left.png", 78, 34)
+    buttonLeft.x = 695  -- Defina a posição X desejada
+    buttonLeft.y = 964  -- Defina a posição Y desejada
+    buttonRight:addEventListener('tap', function()
+      composer.gotoScene("src.pages.page6", {effect = "fade", time = 500})
+  end)
 end
 
-function contracapaScene:show(event)
-    local phase = event.phase
-    print("Contracapa Scene: show", phase)
-end
-
-function contracapaScene:hide(event)
-    local phase = event.phase
-    print("Contracapa Scene: hide", phase)
-end
-
+contracapaScene:addEventListener("create", contracapaScene)
 return contracapaScene

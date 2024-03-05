@@ -46,12 +46,22 @@ function page1Scene:create(event)
 
 
     local buttonRight = display.newImageRect(sceneGroup, "src/assets/icons/arrow-right.png", 78, 34)
-    buttonRight.x = 70  
-    buttonRight.y = 960 
-
+    buttonRight.x = 695
+    buttonRight.y = 960
+    buttonRight:addEventListener('tap', function()
+        composer.removeScene("src.pages.page1") -- Remover a cena atual
+        composer.gotoScene("src.pages.page2", {effect = "fade", time = 500})
+    end)
+    
     local buttonLeft = display.newImageRect(sceneGroup, "src/assets/icons/arrow-left.png", 78, 34)
-    buttonLeft.x = 695  
-    buttonLeft.y = 960 
+    buttonLeft.x = 70
+    buttonLeft.y = 960
+    buttonLeft:addEventListener('tap', function()
+        composer.removeScene("src.pages.page1") -- Remover a cena atual
+        composer.gotoScene("src.pages.capa", {effect = "fade", time = 500})
+    end)
+
+   
 
     -- Cria retângulos como colisões
     for i = 1, #pontos - 1 do
@@ -95,5 +105,7 @@ function arrastarPersonagem(event)
 
     return true
 end
+
+page1Scene:addEventListener("create", page1Scene)
 
 return page1Scene
