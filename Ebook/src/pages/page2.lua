@@ -1,14 +1,13 @@
 local composer = require("composer")
+system.activate("multitouch")
 
 local page2Scene = composer.newScene()
 
 local mapaOriginal
 local mapaSubstituto
 local zoomLevel = 1.0
-local buttonZoomIn
-local buttonZoomOut
 
-local function zoomIn(event)
+local function zoomIn()
     zoomLevel = zoomLevel + 0.1
     transition.to(mapaOriginal, { xScale = zoomLevel, yScale = zoomLevel, x = display.contentCenterX, y = 750, time = 1000, onComplete = function()
         mapaOriginal.isVisible = false
@@ -16,7 +15,7 @@ local function zoomIn(event)
     end })
 end
 
-local function zoomOut(event)
+local function zoomOut()
     zoomLevel = zoomLevel - 0.1
     transition.to(mapaOriginal, { xScale = zoomLevel, yScale = zoomLevel, x = display.contentCenterX, y = 750, time = 1000, onComplete = function()
         mapaSubstituto.isVisible = false
@@ -27,15 +26,13 @@ end
 function page2Scene:create(event)
     local sceneGroup = self.view
 
+    -- Adicione o restante do código relacionado à cena aqui
+
     local capa = display.newImageRect(sceneGroup, "src/assets/frames/frame3.png", 768, 1024)
     capa.x = display.contentCenterX
     capa.y = display.contentCenterY
 
-    buttonZoomIn = display.newText(sceneGroup, "+", 100, 900, native.systemFontBold, 40)
-    buttonZoomIn:setFillColor(0, 0, 0)
-    buttonZoomIn:addEventListener("tap", zoomIn)
-
-    buttonZoomOut = display.newText(sceneGroup, "-", 200, 900, native.systemFontBold, 40)
+    local buttonZoomOut = display.newText(sceneGroup, "-", 200, 900, native.systemFontBold, 40)
     buttonZoomOut:setFillColor(0, 0, 0)
     buttonZoomOut:addEventListener("tap", zoomOut)
 
@@ -43,18 +40,17 @@ function page2Scene:create(event)
     buttonRight.x = 695
     buttonRight.y = 960
     buttonRight:addEventListener('tap', function()
-        composer.removeScene("src.pages.page2") -- Remover a cena atual
+        composer.removeScene("src.pages.page2")
         composer.gotoScene("src.pages.page3", {effect = "fade", time = 500})
     end)
-    
+
     local buttonLeft = display.newImageRect(sceneGroup, "src/assets/icons/arrow-left.png", 78, 34)
     buttonLeft.x = 70
     buttonLeft.y = 960
     buttonLeft:addEventListener('tap', function()
-        composer.removeScene("src.pages.page2") -- Remover a cena atual
+        composer.removeScene("src.pages.page2")
         composer.gotoScene("src.pages.page1", {effect = "fade", time = 500})
     end)
-
 
     -- Carregue o mapa original
     mapaOriginal = display.newImageRect(sceneGroup, "src/assets/page2/mapa.png", 514, 516)
@@ -65,9 +61,35 @@ function page2Scene:create(event)
     mapaSubstituto = display.newImageRect(sceneGroup, "src/assets/page2/garanhuns_zoom.png", 958, 576)
     mapaSubstituto.x = display.contentCenterX
     mapaSubstituto.y = 750
-    mapaSubstituto.isVisible = false  -- Inicialmente invisível
+    mapaSubstituto.isVisible = false
+end
+
+function page2Scene:show(event)
+    local sceneGroup = self.view
+    local phase = event.phase
+
+    if (phase == "will") then
+        -- Adiciona a função de toque ao toque na cena
+        sceneGroup:addEventListener("tap", zoomIn)
+    elseif (phase == "did") then
+        -- Lógica adicional após a cena ser mostrada
+    end
+end
+
+function page2Scene:hide(event)
+    local sceneGroup = self.view
+    local phase = event.phase
+
+    if (phase == "will") then
+        -- Remove a função de toque ao toque na cena
+        sceneGroup:removeEventListener("tap", zoomIn)
+    elseif (phase == "did") then
+        -- Lógica adicional após a cena ser ocultada
+    end
 end
 
 page2Scene:addEventListener("create", page2Scene)
+page2Scene:addEventListener("show", page2Scene)
+page2Scene:addEventListener("hide", page2Scene)
 
 return page2Scene
