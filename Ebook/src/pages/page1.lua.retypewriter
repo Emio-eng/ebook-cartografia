@@ -1,3 +1,6 @@
+reTypewriter Snapshots v1
+
+--01----------
 local composer = require("composer")
 
 local page1Scene = composer.newScene()
@@ -123,19 +126,17 @@ function mostrarMapaFeio()
         circulo.isVisible = false
     end
 
-    -- Substitua o pirata triste pelo pirata feliz
-    mostrarPirataFeliz()
+    -- Altere a visibilidade do pirata triste e feliz
+    pirataTriste.isVisible = false
+    pirataFeliz.isVisible = true
 end
+
 
 function mostrarPirataFeliz()
-    -- Verifique se o mapa2 está visível
-    if mapa2.isVisible then
-        -- Altere a visibilidade do pirata triste e feliz ao mudar de mapa
-        pirataTriste.isVisible = false
-        pirataFeliz.isVisible = true
-    end
+    -- Altere a visibilidade do pirata triste e feliz ao mudar de mapa
+    pirataTriste.isVisible = false
+    pirataFeliz.isVisible = true
 end
-
 
 function esconderCirculos()
     -- Remova os círculos criados
@@ -157,3 +158,5 @@ end
 page1Scene:addEventListener("create", page1Scene)
 
 return page1Scene
+
+--------------
