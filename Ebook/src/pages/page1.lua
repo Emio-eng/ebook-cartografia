@@ -1,57 +1,37 @@
 local composer = require("composer")
-local physics = require("physics")
 
 local page1Scene = composer.newScene()
-local mapaOriginal
+local mapaFeio
+local mapa2
 local personagem
-local pontos = {
-    {271, 646},
-    {163, 780},
-    {239, 842},
-    {287, 818},
-    {343, 726},
-    {439, 718},
-}
-
-local retangulos = {}
+local mascara
 
 function page1Scene:create(event)
     local sceneGroup = self.view
-
-    physics.start()
-    physics.setGravity(0, 0)
 
     local capa = display.newImageRect(sceneGroup, "src/assets/frames/frame2.png", 768, 1024)
     capa.x = display.contentCenterX
     capa.y = display.contentCenterY
 
-    mapaOriginal = display.newImageRect(sceneGroup, "src/assets/page1/mapa2.jpeg", 590, 430)
-    mapaOriginal.x = display.contentCenterX
-    mapaOriginal.y = 735
+    mapaFeio = display.newImageRect(sceneGroup, "src/assets/page1/mapa_feio.jpg", 590, 430)
+    mapaFeio.x = display.contentCenterX
+    mapaFeio.y = 735
 
-    for i = 1, #pontos - 1 do
-        local x1, y1 = pontos[i][1], pontos[i][2]
-        local x2, y2 = pontos[i + 1][1], pontos[i + 1][2]
-    
-        local linha = display.newLine(sceneGroup, x1, y1, x2, y2)  
-    
-        linha:setStrokeColor(1, 1, 1)  -- Branco
-        linha.strokeWidth = 30  -- Ajuste conforme necessário
-    
-        -- Adicione a física à linha (opcional)
-        physics.addBody(linha, "static", {density = 1.0, friction = 1.0, bounce = 0.0})
-    end
+    mapa2 = display.newImageRect(sceneGroup, "src/assets/page1/mapa2.png", 590, 430)
+    mapa2.x = display.contentCenterX
+    mapa2.y = 735
+    mapa2.isVisible = false
 
-    -- Reposiciona o personagem para o primeiro ponto
-    personagem = display.newImageRect(sceneGroup, "src/assets/page1/pirate.png", 50, 50)
-    personagem.x, personagem.y = pontos[1][1], pontos[1][2]
-    physics.addBody(personagem, { density = 1.0, friction = 1.0, bounce = 0.0 })
+    mascara = graphics.newMask("src/assets/page1/mascara.png")
+    mapaFeio:setMask(mascara)
+    mapaFeio.maskX = display.contentCenterX
+    mapaFeio.maskY = display.contentCenterY
 
     local buttonRight = display.newImageRect(sceneGroup, "src/assets/icons/arrow-right.png", 78, 34)
     buttonRight.x = 695
     buttonRight.y = 960
     buttonRight:addEventListener('tap', function()
-        composer.removeScene("src.pages.page1") -- Remover a cena atual
+        composer.removeScene("src.pages.page1")
         composer.gotoScene("src.pages.page2", { effect = "fade", time = 500 })
     end)
 
@@ -59,34 +39,26 @@ function page1Scene:create(event)
     buttonLeft.x = 70
     buttonLeft.y = 960
     buttonLeft:addEventListener('tap', function()
-        composer.removeScene("src.pages.page1") -- Remover a cena atual
+        composer.removeScene("src.pages.page1")
         composer.gotoScene("src.pages.capa", { effect = "fade", time = 500 })
     end)
 
-    -- Adiciona a função de arrastar ao personagem
-    personagem:addEventListener("touch", arrastarPersonagem)
+    mapaFeio:addEventListener("touch", deslizarDedo)
 end
 
-function arrastarPersonagem(event)
+function deslizarDedo(event)
     local phase = event.phase
 
-    if (phase == "began") then
-        display.currentStage:setFocus(personagem)
-        personagem.isFocus = true
-        personagem.x0 = event.x - personagem.x
-        personagem.y0 = event.y - personagem.y
+    if (phase == "moved" or phase == "began") then
+        local x, y = event.x - display.screenOriginX, event.y - display.screenOriginY
+        local normalizedX, normalizedY = x / display.actualContentWidth, 1 - y / display.actualContentHeight
 
-    elseif (personagem.isFocus) then
-        if (phase == "moved") then
-            local novoX = event.x - personagem.x0
-            local novoY = event.y - personagem.y0
-
-            personagem.x = novoX
-            personagem.y = novoY
-        elseif (phase == "ended" or phase == "cancelled") then
-            display.currentStage:setFocus(nil)
-            personagem.isFocus = false
-        end
+        -- Ajuste a posição da máscara para revelar gradualmente o mapa2
+        mapaFeio.maskX = normalizedX * display.contentWidth
+        mapaFeio.maskY = normalizedY * display.contentHeight
+        mapa2.isVisible = true
+    elseif (phase == "ended" or phase == "cancelled") then
+        mapa2.isVisible = false
     end
 
     return true
