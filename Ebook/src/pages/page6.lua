@@ -3,11 +3,13 @@ local composer = require("composer")
 local page6Scene = composer.newScene()
 
 local mapaOriginal
-local parteNorte
-local parteNordeste
-local parteSudeste
-local parteSul
-local parteCentroOeste
+local botaoNorte, textoNorte
+local botaoCentro, textoCentro
+local botaoNordeste, textoNordeste
+local botaoSul, textoSul
+local botaoSudeste, textoSudeste
+local buttonRight
+local buttonLeft
 
 local function removerOuAdicionarImagem(botao, imagemPath, largura, altura, posX, posY)
     if botao.estadoImagem then
@@ -61,6 +63,34 @@ local function criarBotaoTexto(sceneGroup, x, y, texto, distanciaTexto, callback
     return areaToque, textoBotao
 end
 
+local function resetBotoes()
+    if botaoNorte and botaoNorte.estadoImagem then
+        botaoNorte.estadoImagem:removeSelf()
+        botaoNorte.estadoImagem = nil
+    end
+
+    if botaoNordeste and botaoNordeste.estadoImagem then
+        botaoNordeste.estadoImagem:removeSelf()
+        botaoNordeste.estadoImagem = nil
+    end
+
+    if botaoSudeste and botaoSudeste.estadoImagem then
+        botaoSudeste.estadoImagem:removeSelf()
+        botaoSudeste.estadoImagem = nil
+    end
+
+    if botaoSul and botaoSul.estadoImagem then
+        botaoSul.estadoImagem:removeSelf()
+        botaoSul.estadoImagem = nil
+    end
+
+    if botaoCentro and botaoCentro.estadoImagem then
+        botaoCentro.estadoImagem:removeSelf()
+        botaoCentro.estadoImagem = nil
+    end
+end
+
+
 
 function page6Scene:create(event)
     local sceneGroup = self.view
@@ -77,36 +107,41 @@ function page6Scene:create(event)
  
     -- Crie os botões para navegação
    
-    local buttonRight = display.newImageRect(sceneGroup, "src/assets/icons/arrow-right.png", 78, 34)
+    buttonRight = display.newImageRect(sceneGroup, "src/assets/icons/arrow-right.png", 78, 34)
     buttonRight.x = 695
     buttonRight.y = 960
     buttonRight:addEventListener('tap', function()
         composer.removeScene("src.pages.page6") -- Remover a cena atual
+        resetBotoes()
         composer.gotoScene("src.pages.contracapa", {effect = "fade", time = 500})
     end)
     
-    local buttonLeft = display.newImageRect(sceneGroup, "src/assets/icons/arrow-left.png", 78, 34)
+    buttonLeft = display.newImageRect(sceneGroup, "src/assets/icons/arrow-left.png", 78, 34)
     buttonLeft.x = 70
     buttonLeft.y = 960
     buttonLeft:addEventListener('tap', function()
         composer.removeScene("src.pages.page6") -- Remover a cena atual
+        resetBotoes()
         composer.gotoScene("src.pages.page5", {effect = "fade", time = 500})
     end)
 
-
-
-
-
-    local botaoNorte, textoNorte = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 800, "Norte", 30, onBotaoNorteClicado)
-    local botaoCentro, textoCentro = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 840, "Centro-oeste", 60, onBotaoCentroOesteClicado)
-    local botaoNordeste, textoNordeste = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 880, "Nordeste", 45, onBotaoNordesteClicado)
-    local botaoSul, textoSul = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 920, "Sul", 20, onBotaoSulClicado)
-    local botaoSudeste, textoSudeste = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 760, "Sudeste", 40, onBotaoSudesteClicado)
-
-
+    botaoNorte, textoNorte = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 800, "Norte", 30, onBotaoNorteClicado)
+    botaoCentro, textoCentro = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 840, "Centro-oeste", 60, onBotaoCentroOesteClicado)
+    botaoNordeste, textoNordeste = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 880, "Nordeste", 45, onBotaoNordesteClicado)
+    botaoSul, textoSul = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 920, "Sul", 20, onBotaoSulClicado)
+    botaoSudeste, textoSudeste = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 760, "Sudeste", 40, onBotaoSudesteClicado)
 
 end
 
+function page6Scene:hide(event)
+    if event.phase == "will" then
+        -- Remover os elementos ao sair da cena
+        display.remove(mapaOriginal)
+        resetBotoes()
+    end
+end
+
 page6Scene:addEventListener("create", page6Scene)
+page6Scene:addEventListener("hide", page6Scene)
 
 return page6Scene
