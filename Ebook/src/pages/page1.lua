@@ -1,4 +1,5 @@
 local composer = require("composer")
+local audio = require("audio")
 
 local page1Scene = composer.newScene()
 local mapaFeio
@@ -9,6 +10,17 @@ local maxCirculos = 400  -- Defina o número máximo de círculos escuros para r
 local contadorCirculos = 0  -- Variável para armazenar a quantidade de círculos
 local circulosCriados = {}  -- Tabela para armazenar referências aos círculos criados
 local isMapVisible = false  -- Variável para controlar a visibilidade do mapa_feio
+local audioButton
+
+local audioFile = "src/sounds/page1.mp3"
+
+
+
+local function stopAudioIfPlaying()
+    if audio.isChannelActive(1) then
+        audio.stop(1)
+    end
+end
 
 function page1Scene:create(event)
     local sceneGroup = self.view
@@ -38,23 +50,30 @@ function page1Scene:create(event)
     pirataFeliz.isVisible = false
 
     local buttonRight = display.newImageRect(sceneGroup, "src/assets/icons/arrow-right.png", 78, 34)
-    buttonRight.x = 695
-    buttonRight.y = 960
-    buttonRight:addEventListener('tap', function()
-        esconderCirculos()
-        mostrarPirataFeliz()  -- Mostrar o pirata feliz ao mudar para o próximo mapa
-        composer.removeScene("src.pages.page1")
-        composer.gotoScene("src.pages.page2", { effect = "fade", time = 500 })
-    end)
+buttonRight.x = 695
+buttonRight.y = 960
+buttonRight:addEventListener('tap', function()
+    stopAudioIfPlaying()  -- Adicione esta linha para parar o áudio, se estiver reproduzindo
+    esconderCirculos()
+    mostrarPirataFeliz()
+    composer.removeScene("src.pages.page1")
+    composer.gotoScene("src.pages.page2", { effect = "fade", time = 500 })
+end)
 
-    local buttonLeft = display.newImageRect(sceneGroup, "src/assets/icons/arrow-left.png", 78, 34)
-    buttonLeft.x = 70
-    buttonLeft.y = 960
-    buttonLeft:addEventListener('tap', function()
-        esconderCirculos()
-        composer.removeScene("src.pages.page1")
-        composer.gotoScene("src.pages.capa", { effect = "fade", time = 500 })
-    end)
+local buttonLeft = display.newImageRect(sceneGroup, "src/assets/icons/arrow-left.png", 78, 34)
+buttonLeft.x = 70
+buttonLeft.y = 960
+buttonLeft:addEventListener('tap', function()
+    stopAudioIfPlaying()  -- Adicione esta linha para parar o áudio, se estiver reproduzindo
+    esconderCirculos()
+    composer.removeScene("src.pages.page1")
+    composer.gotoScene("src.pages.capa", { effect = "fade", time = 500 })
+end)
+
+    local audioButton = display.newImageRect(sceneGroup, "src/assets/icons/alto-falante.png", 45, 45)
+    audioButton.x = display.contentCenterX
+    audioButton.y = 355
+    audioButton:addEventListener('tap', toggleAudio)
 
     -- Adicione um evento de toque para a cena
     sceneGroup:addEventListener("touch", deslizarDedo)
@@ -94,6 +113,19 @@ function deslizarDedo(event)
     end
 
     return true
+end
+
+function toggleAudio()
+    if audio.isChannelActive(1) then
+        audio.stop(1)
+    else
+        local options = {
+            channel = 1,
+            loops = 0,
+            fadein = 1000,
+        }
+        audio.play(audio.loadStream(audioFile), options)
+    end
 end
 
 function estaDentroDoPirata(x, y)
@@ -154,6 +186,8 @@ function estaDentroDaImagem(x, y)
     return (x >= leftBound and x <= rightBound and y >= upperBound and y <= lowerBound)
 end
 
+
 page1Scene:addEventListener("create", page1Scene)
+page1Scene:addEventListener("hide", page1Scene)
 
 return page1Scene
