@@ -26,6 +26,10 @@ function contracapaScene:create(event)
       composer.removeScene("src.pages.contracapa")
       composer.gotoScene("src.pages.page6", {effect = "fade", time = 500})
   end)
+
+  local audioButton = display.newImageRect(sceneGroup, "src/assets/icons/alto-falante.png", 45, 45)
+    audioButton.x = 390
+    audioButton.y = 960
 end
 
 contracapaScene:addEventListener("create", contracapaScene)

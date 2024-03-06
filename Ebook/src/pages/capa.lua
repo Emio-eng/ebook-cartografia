@@ -27,6 +27,10 @@ function capaScene:create(event)
       composer.gotoScene("src.pages.contracapa", {effect = "fade", time = 500})
   end)
 
+  local audioButton = display.newImageRect(sceneGroup, "src/assets/icons/alto-falante.png", 45, 45)
+    audioButton.x = 390
+    audioButton.y = 960
+
     -- Configura o evento de toque no botão
 end
 
