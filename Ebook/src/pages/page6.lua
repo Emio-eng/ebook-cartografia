@@ -10,6 +10,16 @@ local botaoSul, textoSul
 local botaoSudeste, textoSudeste
 local buttonRight
 local buttonLeft
+local audioButton
+
+local audioFile = "src/sounds/page6.mp3"
+
+local function stopAudioIfPlaying()
+    if audio.isChannelActive(1) then
+        audio.stop(1)
+    end
+end
+
 
 local function removerOuAdicionarImagem(botao, imagemPath, largura, altura, posX, posY)
     if botao.estadoImagem then
@@ -89,7 +99,18 @@ local function resetBotoes()
         botaoCentro.estadoImagem = nil
     end
 end
-
+function toggleAudio()
+    if audio.isChannelActive(1) then
+        audio.stop(1)
+    else
+        local options = {
+            channel = 1,
+            loops = 0,
+            fadein = 1000,
+        }
+        audio.play(audio.loadStream(audioFile), options)
+    end
+end
 
 
 function page6Scene:create(event)
@@ -112,6 +133,7 @@ function page6Scene:create(event)
     buttonRight.y = 960
     buttonRight:addEventListener('tap', function()
         composer.removeScene("src.pages.page6") -- Remover a cena atual
+        stopAudioIfPlaying()  
         resetBotoes()
         composer.gotoScene("src.pages.contracapa", {effect = "fade", time = 500})
     end)
@@ -121,9 +143,15 @@ function page6Scene:create(event)
     buttonLeft.y = 960
     buttonLeft:addEventListener('tap', function()
         composer.removeScene("src.pages.page6") -- Remover a cena atual
+        stopAudioIfPlaying()  
         resetBotoes()
         composer.gotoScene("src.pages.page5", {effect = "fade", time = 500})
     end)
+
+    local audioButton = display.newImageRect(sceneGroup, "src/assets/icons/alto-falante.png", 45, 45)
+    audioButton.x = 380
+    audioButton.y = 390
+    audioButton:addEventListener('tap', toggleAudio)
 
     botaoNorte, textoNorte = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 800, "Norte", 30, onBotaoNorteClicado)
     botaoCentro, textoCentro = criarBotaoTexto(sceneGroup, display.contentCenterX - 320, 840, "Centro-oeste", 60, onBotaoCentroOesteClicado)
