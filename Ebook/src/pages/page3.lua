@@ -9,6 +9,28 @@ local initialAngle = 45 -- Ângulo inicial em graus
 local rotationSpeed = 2 -- Velocidade de rotação em graus por frame
 local isAnimating = false
 local numRevolutions = 0 -- Número de voltas completas
+
+
+local audioFile = "src/sounds/page3.mp3"
+
+local function stopAudioIfPlaying()
+    if audio.isChannelActive(1) then
+        audio.stop(1)
+    end
+end
+function toggleAudio()
+    if audio.isChannelActive(1) then
+        audio.stop(1)
+    else
+        local options = {
+            channel = 1,
+            loops = 0,
+            fadein = 1000,
+        }
+        audio.play(audio.loadStream(audioFile), options)
+    end
+end
+
 local function projecaoCilindrica()
     if satelite then
         -- Remover satelite, terra e espaco
@@ -84,6 +106,7 @@ function page3Scene:create(event)
     buttonRight.x = 695
     buttonRight.y = 960
     buttonRight:addEventListener('tap', function()
+        stopAudioIfPlaying()  
         composer.removeScene("src.pages.page3")
         composer.gotoScene("src.pages.page4", {effect = "fade", time = 500})
     end)
@@ -92,9 +115,15 @@ function page3Scene:create(event)
     buttonLeft.x = 70
     buttonLeft.y = 960
     buttonLeft:addEventListener('tap', function()
+        stopAudioIfPlaying()  
         composer.removeScene("src.pages.page3")
         composer.gotoScene("src.pages.page2", {effect = "fade", time = 500})
     end)
+
+    local audioButton = display.newImageRect(sceneGroup, "src/assets/icons/alto-falante.png", 45, 45)
+    audioButton.x = 380
+    audioButton.y = 440
+    audioButton:addEventListener('tap', toggleAudio)
 end
 
  
