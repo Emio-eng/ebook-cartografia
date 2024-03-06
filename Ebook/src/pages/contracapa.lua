@@ -5,9 +5,7 @@ local contracapaScene = composer.newScene()
 function contracapaScene:create(event)
     local sceneGroup = self.view
 
-    print("Contracapa Scene: create")
-
-    local contracapa = display.newImageRect(sceneGroup, "src/assets/frames/Frame8.png", 768, 1024)
+    local contracapa = display.newImageRect(sceneGroup, "src/assets/frames/frame8.png", 768, 1024)
     contracapa.x = display.contentCenterX
     contracapa.y = display.contentCenterY
 

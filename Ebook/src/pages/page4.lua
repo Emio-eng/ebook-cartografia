@@ -26,7 +26,7 @@ function page4Scene:create(event)
 
     -- Adicione o restante do código relacionado à cena aqui
 
-    local capa = display.newImageRect(sceneGroup, "src/assets/frames/Frame5.png", 768, 1024)
+    local capa = display.newImageRect(sceneGroup, "src/assets/frames/frame5.png", 768, 1024)
     capa.x = display.contentCenterX
     capa.y = display.contentCenterY
 

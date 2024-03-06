@@ -6,7 +6,7 @@ local capaScene = composer.newScene()
 function capaScene:create(event)
     local sceneGroup = self.view
 
-    local capa = display.newImageRect(sceneGroup, "src/assets/frames/Frame1.png", 768, 1024)
+    local capa = display.newImageRect(sceneGroup, "src/assets/frames/frame1.png", 768, 1024)
     capa.x = display.contentCenterX
     capa.y = display.contentCenterY
 
