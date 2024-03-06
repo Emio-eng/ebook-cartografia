@@ -6,7 +6,7 @@ local page2Scene = composer.newScene()
 local mapaOriginal
 local mapaSubstituto
 local zoomLevel = 1.0
-local audioFile = "src/sounds/page5.mp3"
+local audioFile = "src/sounds/page2.mp3"
 
 local function stopAudioIfPlaying()
     if audio.isChannelActive(1) then
@@ -27,21 +27,22 @@ function toggleAudio()
     end
 end
 
-
-local function zoomIn()
-    zoomLevel = zoomLevel + 0.1
-    transition.to(mapaOriginal, { xScale = zoomLevel, yScale = zoomLevel, x = display.contentCenterX, y = 750, time = 1000, onComplete = function()
-        mapaOriginal.isVisible = false
-        mapaSubstituto.isVisible = true
-    end })
-end
-
-local function zoomOut()
-    zoomLevel = zoomLevel - 0.1
-    transition.to(mapaOriginal, { xScale = zoomLevel, yScale = zoomLevel, x = display.contentCenterX, y = 750, time = 1000, onComplete = function()
-        mapaSubstituto.isVisible = false
-        mapaOriginal.isVisible = true
-    end })
+local function switchMap()
+    if mapaOriginal.isVisible then
+        transition.to(mapaOriginal, { alpha = 0, time = 1000, onComplete = function()
+            mapaOriginal.isVisible = false
+        end })
+        transition.to(mapaSubstituto, { alpha = 1, time = 1000, onComplete = function()
+            mapaSubstituto.isVisible = true
+        end })
+    else
+        transition.to(mapaSubstituto, { alpha = 0, time = 1000, onComplete = function()
+            mapaSubstituto.isVisible = false
+        end })
+        transition.to(mapaOriginal, { alpha = 1, time = 1000, onComplete = function()
+            mapaOriginal.isVisible = true
+        end })
+    end
 end
 
 function page2Scene:create(event)
@@ -52,10 +53,6 @@ function page2Scene:create(event)
     local capa = display.newImageRect(sceneGroup, "src/assets/frames/frame3.png", 768, 1024)
     capa.x = display.contentCenterX
     capa.y = display.contentCenterY
-
-    local buttonZoomOut = display.newText(sceneGroup, "-", 200, 900, native.systemFontBold, 40)
-    buttonZoomOut:setFillColor(0, 0, 0)
-    buttonZoomOut:addEventListener("tap", zoomOut)
 
     local buttonRight = display.newImageRect(sceneGroup, "src/assets/icons/arrow-right.png", 78, 34)
     buttonRight.x = 695
@@ -85,6 +82,11 @@ function page2Scene:create(event)
     mapaOriginal.x = display.contentCenterX
     mapaOriginal.y = 750
 
+    local locButton = display.newImageRect(sceneGroup, "src/assets/icons/loc.png", 45, 45)
+    locButton.x = 280
+    locButton.y = 780
+    locButton:addEventListener('tap', switchMap)
+
     -- Carregue o mapa substituto
     mapaSubstituto = display.newImageRect(sceneGroup, "src/assets/page2/garanhuns_zoom.png", 958, 576)
     mapaSubstituto.x = display.contentCenterX
@@ -97,8 +99,8 @@ function page2Scene:show(event)
     local phase = event.phase
 
     if (phase == "will") then
-        -- Adiciona a função de toque ao toque na cena
-        sceneGroup:addEventListener("tap", zoomIn)
+        -- Não adiciona mais a função de toque ao toque na cena
+        -- sceneGroup:addEventListener("tap", zoomIn)
     elseif (phase == "did") then
         -- Lógica adicional após a cena ser mostrada
     end
@@ -109,8 +111,8 @@ function page2Scene:hide(event)
     local phase = event.phase
 
     if (phase == "will") then
-        -- Remove a função de toque ao toque na cena
-        sceneGroup:removeEventListener("tap", zoomIn)
+        -- Não remove mais a função de toque ao toque na cena
+        -- sceneGroup:removeEventListener("tap", zoomIn)
     elseif (phase == "did") then
         -- Lógica adicional após a cena ser ocultada
     end
